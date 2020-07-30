@@ -1,20 +1,84 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color='primary'>
     <ion-title>
-      Blank
+      Print PDF via Bluetooth
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]='true' >
 
+    
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>PDF section</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button  color ='success' expand='block' (click)='createPdf()'>Create PDF</ion-button>
+        <ion-button color ='tertiary' expand='block' (click)='downloadPdf()'[disabled]="!pdfObj">Download PDF</ion-button>
+        <ion-button color ='success' expand='block' (click)='openpdf()'[disabled]="!pdfObj">Open PDF</ion-button>
+      </ion-card-content>
+    </ion-card>
+<!--PRINT-->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Print section</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button color ='warning' expand='block' (click)='listPrinter()'>List Devices</ion-button>
+         <ion-button color ='secondary' expand='block' (click)='listunpaired()'>List UNPAIRED Devices</ion-button>
+      </ion-card-content>
+    </ion-card>
+  
+   
+
+ <ion-list *ngIf="ListBluetooth">
+  <ion-label>PAIRED</ion-label>
+   <ion-item *ngFor ="let item of ListBluetooth"
+    (click)="selectPrinter(item.id)">
+   <ion-label> Mac :{{item.id}} </ion-label> 
+   <ion-label> Name : {{item.name}}</ion-label> 
+   </ion-item>
+ </ion-list>
+ <ion-list *ngIf="unpairlist">
+   <ion-label>UNPAIRED</ion-label>
+   <ion-item *ngFor ="let item of unpairlist"
+    (click)="selectPrinter(item.id)">
+     <ion-label> Mac :{{item.id}} </ion-label> 
+   <ion-label> Name : {{item.name}}</ion-label> 
+   </ion-item>
+ </ion-list>
+ <div *ngIf='ListBluetooth'>
+ <strong>Ready to PRINT?</strong>
+  <ion-card  > 
+    <ion-card-header><ion-card-subtitle class='selected'>Selected Printer :{{selectedPrinter}}</ion-card-subtitle></ion-card-header>
+  </ion-card>
+</div>
+  <ion-button color='danger' expand='block' *ngIf ='selectedPrinter' (click)="printText()"> PRINT</ion-button>
+ <!---   <ion-button color='danger' expand='block' *ngIf ='selectedPrinter' (click)="printStuffArray()"> PRINT Array</ion-button>
+    
+  <ion-button color='danger' expand='block' *ngIf ='selectedPrinter' (click)="printStuffBlob()"> PRINT Blob</ion-button> -->
+   
+  <ion-card *ngIf='selectedPrinter'>
+    <ion-card-header>
+      <ion-card-title>Custom Text Printing</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+        <ion-input placeholder='Enter the Text' type='text' [(ngModel)]='textData'></ion-input>
+        
+          <ion-button  *ngIf='textData' color='danger' expand='block' (click)='printCustomText()'>Print Custom Text</ion-button>
+       
+    </ion-card-content>
+  </ion-card>
+
+
+</div>
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)='share()' [disabled]="!pdfObj">
+      <ion-icon name="share"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
